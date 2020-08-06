@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 public class SocialStudentApplication {
 
-	@Configuration
+	/*@Configuration
 	@EnableWebMvc
 	protected class AppMvcConfiguration implements WebMvcConfigurer {
 
@@ -28,13 +28,7 @@ public class SocialStudentApplication {
 					.allowedMethods("GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE", "HEAD").allowCredentials(true);
 		}
 
-		@Override
-		public void addResourceHandlers(ResourceHandlerRegistry registry) {
-			registry.addResourceHandler("/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
-			registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		}
-
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(SocialStudentApplication.class, args);

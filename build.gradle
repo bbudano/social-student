@@ -25,18 +25,18 @@ dependencies {
 
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.6.RELEASE'
-	implementation 'org.springframework.security:spring-security-jwt'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
-	// Database
+
+    // Database
 	implementation 'org.postgresql:postgresql'
 
 	// Swagger
-	implementation('io.springfox:springfox-swagger2:2.9.2')
-	implementation('io.springfox:springfox-swagger-ui:2.9.2')
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
 	// Time
-	implementation('joda-time:joda-time')
+	implementation 'joda-time:joda-time'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-joda'
 	implementation 'org.jadira.usertype:usertype.core:6.0.1.GA'
 
@@ -57,10 +57,10 @@ dependencies {
 
 	testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
 
-	testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
 	testCompile "org.mockito:mockito-core:2.+"
-	testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+	testCompile 'org.mockito:mockito-junit-jupiter:2.18.3'
 }
 
 test {

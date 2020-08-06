@@ -9,15 +9,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "user_data")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserData implements UserDetails {
+@Data
+public class UserData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_data_id_seq_generator")
@@ -34,12 +33,11 @@ public class UserData implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "enabled")
-    private boolean enabled;
-
-    @Column(name = "role")
-    private String role;
-    SimpleGrantedAuthority authorities;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(
             mappedBy = "author",
@@ -49,84 +47,10 @@ public class UserData implements UserDetails {
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    public UserData(String username, String email, String password) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities()
-    {
-        List<SimpleGrantedAuthority> auths = new ArrayList<>();
-        auths.add(authorities);
-        return auths;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    @Override
-    public boolean isAccountNonExpired()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired()
-    {
-        return true;
     }
 
 }

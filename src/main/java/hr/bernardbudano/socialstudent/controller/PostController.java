@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,23 @@ public class PostController {
                                      @RequestParam(name = "size", defaultValue = "50", required = false) Integer size) {
         final Page<Post> entityPage = postService.findAll(PageRequest.of(page, size));
         return entityPage.map(PostDto::fromEntity);
+    }
+
+    @GetMapping("/all")
+    public String all() {
+        return "Public content";
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public String onlyUser(){
+        return "User content";
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String onlyAdmin(){
+        return "Admin content";
     }
 
 }

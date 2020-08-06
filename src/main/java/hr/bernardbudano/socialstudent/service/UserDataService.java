@@ -10,9 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
-public class UserDataService extends AbstractService<UserData, UserDataRepository>  implements UserDetailsService {
+public class UserDataService extends AbstractService<UserData, UserDataRepository> {
 
     @Autowired
     private UserDataRepository userDataRepository;
@@ -22,12 +23,6 @@ public class UserDataService extends AbstractService<UserData, UserDataRepositor
     }
 
     public UserData findByUsername(String username){
-        return userDataRepository.findByUsername(username);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserData userData = userDataRepository.findByUsername(username);
-        return new User(userData.getUsername(), userData.getPassword(), new ArrayList<>());
+        return userDataRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found."));
     }
 }
