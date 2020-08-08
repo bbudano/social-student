@@ -3,10 +3,11 @@ package hr.bernardbudano.socialstudent.security.payload.request;
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {
-    @NotBlank
+
+    @NotBlank(message = "Username must not be blank")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Password must not be blank")
     private String password;
 
     public String getUsername() {

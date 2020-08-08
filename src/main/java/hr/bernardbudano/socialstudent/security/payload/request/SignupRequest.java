@@ -5,19 +5,20 @@ import java.util.Set;
 import javax.validation.constraints.*;
 
 public class SignupRequest {
-    @NotBlank
+
+    @NotBlank(message = "Username must not be blank")
     @Size(min = 3, max = 20)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Email must not be blank")
     @Size(max = 50)
     @Email
     private String email;
 
     private Set<String> role;
 
-    @NotBlank
-    @Size(min = 6, max = 40)
+    @NotBlank(message = "Password must not be blank")
+    @Size(min = 6, max = 40, message = "Password must be at least 6 characters long")
     private String password;
 
     public String getUsername() {
