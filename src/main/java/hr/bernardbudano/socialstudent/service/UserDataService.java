@@ -25,4 +25,12 @@ public class UserDataService extends AbstractService<UserData, UserDataRepositor
     public UserData findByUsername(String username){
         return userDataRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found."));
     }
+
+    public Boolean existsByUsername(String username) {
+        return userDataRepository.existsByUsername(username);
+    }
+
+    public Boolean existsByEmail(String email) {
+        return userDataRepository.existsByEmail(email);
+    }
 }
