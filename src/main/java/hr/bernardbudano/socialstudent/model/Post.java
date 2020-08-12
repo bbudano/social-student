@@ -7,6 +7,8 @@ import lombok.ToString;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -24,14 +26,24 @@ public class Post {
     @Column(name = "body")
     private String body;
 
-    @Column(name = "created_at")
-    private DateTime createdAt;
+    @Column(name = "posted_on")
+    private DateTime postedOn = DateTime.now();
 
-    @Column(name = "like_count")
-    private int likeCount = 0;
+    @Column(name = "upvote_count")
+    private int upvoteCount = 0;
+
+    @Column(name = "downvote_count")
+    private int downvoteCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
     private UserData author;
+
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<Comment> comments = new HashSet<>();
 
 }

@@ -1,17 +1,9 @@
 package hr.bernardbudano.socialstudent.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import hr.bernardbudano.socialstudent.model.Role;
 import hr.bernardbudano.socialstudent.model.RoleName;
 import hr.bernardbudano.socialstudent.model.UserData;
 import hr.bernardbudano.socialstudent.repository.RoleRepository;
-import hr.bernardbudano.socialstudent.repository.UserDataRepository;
 import hr.bernardbudano.socialstudent.security.jwt.JwtUtils;
 import hr.bernardbudano.socialstudent.security.payload.request.LoginRequest;
 import hr.bernardbudano.socialstudent.security.payload.request.SignupRequest;
@@ -20,7 +12,7 @@ import hr.bernardbudano.socialstudent.security.payload.response.MessageResponse;
 import hr.bernardbudano.socialstudent.security.payload.response.UserInfoResponse;
 import hr.bernardbudano.socialstudent.security.service.UserDetailsImpl;
 import hr.bernardbudano.socialstudent.service.UserDataService;
-import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +22,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")

@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_data")
@@ -33,6 +34,21 @@ public class UserData {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "bio")
+    private String bio;
+
+    @Column(name = "website")
+    private String website;
+
+    @Column(name = "linkedin_profile")
+    private String linkedinProfile;
+
+    @Column(name = "facebook_profile")
+    private String facebookProfile;
+
+    @Column(name = "joined_on")
+    private DateTime joinedOn = DateTime.now();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,6 +62,13 @@ public class UserData {
     )
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "author",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<Comment> comments = new HashSet<>();
 
     public UserData(String username, String email, String password) {
         this.username = username;
