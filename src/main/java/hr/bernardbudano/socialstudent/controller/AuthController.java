@@ -1,5 +1,6 @@
 package hr.bernardbudano.socialstudent.controller;
 
+import hr.bernardbudano.socialstudent.dto.user.CredentialsDto;
 import hr.bernardbudano.socialstudent.model.Role;
 import hr.bernardbudano.socialstudent.model.RoleName;
 import hr.bernardbudano.socialstudent.model.UserData;
@@ -124,10 +125,18 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new UserInfoResponse(
+        CredentialsDto credentials = new CredentialsDto(
                 userData.getUsername(),
                 userData.getEmail(),
-                roles
+                userData.getBio(),
+                roles,
+                userData.getJoinedOn(),
+                userData.getWebsite(),
+                userData.getGithubProfile(),
+                userData.getLinkedinProfile()
+        );
+        return ResponseEntity.ok(new UserInfoResponse(
+                credentials
         ));
     }
 }

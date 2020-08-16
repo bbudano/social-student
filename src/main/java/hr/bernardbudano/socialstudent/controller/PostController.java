@@ -59,7 +59,7 @@ public class PostController {
     @ApiOperation("Returns all posts (pageable)")
     public Page<PostDto> getAllPosts(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
                                      @RequestParam(name = "size", defaultValue = "50", required = false) Integer size) {
-        final Page<Post> entityPage = postService.findAll(PageRequest.of(page, size));
+        final Page<Post> entityPage = postService.findAllByOrderByPostedOnDesc(PageRequest.of(page, size));
         return entityPage.map(PostDto::fromEntity);
     }
 

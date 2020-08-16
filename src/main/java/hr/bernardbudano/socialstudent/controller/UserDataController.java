@@ -3,6 +3,7 @@ package hr.bernardbudano.socialstudent.controller;
 import hr.bernardbudano.socialstudent.dto.UpdateUserInfoRequest;
 import hr.bernardbudano.socialstudent.model.UserData;
 import hr.bernardbudano.socialstudent.service.UserDataService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,8 +19,9 @@ public class UserDataController {
 
     @PatchMapping
     @Transactional
-    public ResponseEntity<?> updateUserInfo(UpdateUserInfoRequest request, Authentication authentication) {
-        UserData user = userDataService.findByUsername(authentication.getPrincipal().toString());
+    public ResponseEntity<?> updateUserInfo(@RequestBody UpdateUserInfoRequest request, Authentication authentication) {
+
+        UserData user = userDataService.findByUsername(authentication.getName());
 
         if(request.getBio().isPresent()){
             user.setBio(request.getBio().get());
@@ -30,8 +32,8 @@ public class UserDataController {
         if(request.getLinkedinProfile().isPresent()){
             user.setLinkedinProfile(request.getLinkedinProfile().get());
         }
-        if(request.getFacebookProfile().isPresent()){
-            user.setFacebookProfile(request.getFacebookProfile().get());
+        if(request.getGithubProfile().isPresent()){
+            user.setGithubProfile(request.getGithubProfile().get());
         }
 
         return ResponseEntity.ok("User info updated");

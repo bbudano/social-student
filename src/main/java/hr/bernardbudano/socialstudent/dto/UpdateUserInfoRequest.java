@@ -14,10 +14,10 @@ public class UpdateUserInfoRequest {
     @JsonProperty("website")
     private Optional<String> website = Optional.empty();
 
-    @JsonProperty("linkedin_profile")
-    private Optional<String> linkedinProfile = Optional.empty();
+    @JsonProperty("githubProfile")
+    private Optional<String> githubProfile = Optional.empty();
 
-    @JsonProperty("facebook_profile")
-    private Optional<String> facebookProfile = Optional.empty();
+    @JsonProperty("linkedinProfile")
+    private Optional<String> linkedinProfile = Optional.empty();
 
 }

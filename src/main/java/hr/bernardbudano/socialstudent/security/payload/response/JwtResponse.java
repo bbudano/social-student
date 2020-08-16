@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class JwtResponse {
-    private String accessToken;
+    private String token;
 
-    public JwtResponse(String accessToken) {
-        this.accessToken = accessToken;
+    public JwtResponse(String token) {
+        this.token = token;
     }
 }

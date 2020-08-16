@@ -43,8 +43,8 @@ public class UserData {
     @Column(name = "linkedin_profile")
     private String linkedinProfile;
 
-    @Column(name = "facebook_profile")
-    private String facebookProfile;
+    @Column(name = "github_profile")
+    private String githubProfile;
 
     @Column(name = "joined_on")
     private DateTime joinedOn = DateTime.now();

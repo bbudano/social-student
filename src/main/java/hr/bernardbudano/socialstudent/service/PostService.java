@@ -17,8 +17,8 @@ public class PostService extends AbstractService<Post, PostRepository> {
         super(repository);
     }
 
-    public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    public Page<Post> findAllByOrderByPostedOnDesc(Pageable pageable) {
+        return postRepository.findAllByOrderByPostedOnDesc(pageable);
     }
 
     public Post findById(final Long id) {
