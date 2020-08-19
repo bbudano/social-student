@@ -16,6 +16,7 @@ import hr.bernardbudano.socialstudent.service.UserDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -138,5 +139,24 @@ public class AuthController {
         return ResponseEntity.ok(new UserInfoResponse(
                 credentials
         ));
+    }
+
+
+    // Test APIs
+    @GetMapping("/all")
+    public String all() {
+        return "Public content";
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public String onlyUser(){
+        return "User content";
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String onlyAdmin(){
+        return "Admin content";
     }
 }

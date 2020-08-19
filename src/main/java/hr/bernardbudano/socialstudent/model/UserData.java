@@ -70,6 +70,13 @@ public class UserData {
     )
     private Set<Comment> comments = new HashSet<>();
 
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<PostLike> likedPosts = new HashSet<>();
+
     public UserData(String username, String email, String password) {
         this.username = username;
         this.email = email;

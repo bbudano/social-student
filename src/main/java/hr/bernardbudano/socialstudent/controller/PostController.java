@@ -2,6 +2,7 @@ package hr.bernardbudano.socialstudent.controller;
 
 import hr.bernardbudano.socialstudent.dto.comment.CommentDto;
 import hr.bernardbudano.socialstudent.dto.comment.CreateCommentRequest;
+import hr.bernardbudano.socialstudent.dto.comment.CreateCommentResponse;
 import hr.bernardbudano.socialstudent.dto.post.CreatePostRequest;
 import hr.bernardbudano.socialstudent.dto.post.GetPost;
 import hr.bernardbudano.socialstudent.dto.post.PostDto;
@@ -42,17 +43,14 @@ public class PostController {
     @PostMapping
     @ApiOperation("Creates new post")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> create(@RequestBody CreatePostRequest request, Authentication authentication) {
+    public Post create(@RequestBody CreatePostRequest request, Authentication authentication) {
 
         // TODO: post not blank validation
 
         UserData author = userDataService.findByUsername(authentication.getName());
         Post post = CreatePostRequest.toEntity(request, author);
 
-        postService.create(post);
-
-        // TODO: implement response class
-        return ResponseEntity.ok("Post created successfully");
+        return postService.create(post);
     }
 
     @GetMapping
@@ -78,35 +76,30 @@ public class PostController {
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<?> createComment(
+    public CreateCommentResponse createComment(
             @PathVariable Long id,
             @RequestBody CreateCommentRequest request,
             Authentication authentication) {
 
         UserData author = userDataService.findByUsername(authentication.getName());
         Post post = postService.findById(id);
+        Comment comment = commentService.create(CreateCommentRequest.toEntity(request, author, post));
 
-        commentService.create(CreateCommentRequest.toEntity(request, author, post));
-
-        // TODO: implement response class
-        return ResponseEntity.ok("Comment posted successfully");
+        return CreateCommentResponse.fromEntity(comment);
     }
 
-    @GetMapping("/all")
-    public String all() {
-        return "Public content";
+    @PostMapping("/{id}/like")
+    public void likePost(
+            @PathVariable Long id,
+            Authentication authentication) {
+
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public String onlyUser(){
-        return "User content";
-    }
+    @PostMapping("/{id}/unlike")
+    public void unlikePost(
+            @PathVariable Long id,
+            Authentication authentication) {
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String onlyAdmin(){
-        return "Admin content";
     }
 
 }

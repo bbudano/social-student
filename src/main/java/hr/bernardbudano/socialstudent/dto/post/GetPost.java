@@ -20,9 +20,7 @@ public class GetPost {
 
     private DateTime postedOn;
 
-    private int upvoteCount;
-
-    private int downvoteCount;
+    private int likeCount;
 
     private List<CommentDto> comments;
 
@@ -33,8 +31,7 @@ public class GetPost {
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
         postDto.setPostedOn(post.getPostedOn());
-        postDto.setUpvoteCount(post.getUpvoteCount());
-        postDto.setDownvoteCount(post.getDownvoteCount());
+        postDto.setLikeCount(post.getLikeCount());
 
         return postDto;
     }

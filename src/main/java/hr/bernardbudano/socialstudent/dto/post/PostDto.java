@@ -20,11 +20,8 @@ public class PostDto {
     @JsonProperty("createdAt")
     private DateTime createdAt;
 
-    @JsonProperty("upvoteCount")
-    private int upvoteCount;
-
-    @JsonProperty("downvoteCount")
-    private int downvoteCount;
+    @JsonProperty("likeCount")
+    private int likeCount;
 
     public static PostDto fromEntity(Post post){
         PostDto postDto = new PostDto();
@@ -32,8 +29,7 @@ public class PostDto {
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
         postDto.setCreatedAt(post.getPostedOn());
-        postDto.setUpvoteCount(post.getUpvoteCount());
-        postDto.setDownvoteCount(post.getDownvoteCount());
+        postDto.setLikeCount(post.getLikeCount());
         return postDto;
     }
 
