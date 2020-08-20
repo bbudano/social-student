@@ -1,5 +1,6 @@
 package hr.bernardbudano.socialstudent.controller;
 
+import hr.bernardbudano.socialstudent.dto.PostLikeDto;
 import hr.bernardbudano.socialstudent.dto.user.CredentialsDto;
 import hr.bernardbudano.socialstudent.model.Role;
 import hr.bernardbudano.socialstudent.model.RoleName;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,23 +123,31 @@ public class AuthController {
     public ResponseEntity<?> getUserInfo(Authentication authentication) {
         UserData userData = userDataService.findByUsername(authentication.getName());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
         CredentialsDto credentials = new CredentialsDto(
                 userData.getUsername(),
                 userData.getEmail(),
                 userData.getBio(),
-                roles,
                 userData.getJoinedOn(),
                 userData.getWebsite(),
                 userData.getGithubProfile(),
                 userData.getLinkedinProfile()
         );
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        List<PostLikeDto> likes = new ArrayList<>();
+        userData.getLikedPosts().forEach(likedPost -> {
+            PostLikeDto postLikeDto = new PostLikeDto(likedPost.getUser().getUsername(), likedPost.getPost().getId());
+            likes.add(postLikeDto);
+        });
+
         return ResponseEntity.ok(new UserInfoResponse(
-                credentials
+                credentials,
+                roles,
+                likes
         ));
     }
 

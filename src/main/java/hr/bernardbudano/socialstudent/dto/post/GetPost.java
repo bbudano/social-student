@@ -4,9 +4,7 @@ import hr.bernardbudano.socialstudent.dto.comment.CommentDto;
 import hr.bernardbudano.socialstudent.model.Post;
 import lombok.Data;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -20,8 +18,6 @@ public class GetPost {
 
     private DateTime postedOn;
 
-    private int likeCount;
-
     private List<CommentDto> comments;
 
     public static GetPost fromEntity(final Post post) {
@@ -31,7 +27,6 @@ public class GetPost {
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
         postDto.setPostedOn(post.getPostedOn());
-        postDto.setLikeCount(post.getLikeCount());
 
         return postDto;
     }

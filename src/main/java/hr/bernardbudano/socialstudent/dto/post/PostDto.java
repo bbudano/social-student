@@ -23,13 +23,17 @@ public class PostDto {
     @JsonProperty("likeCount")
     private int likeCount;
 
+    @JsonProperty("commentCount")
+    private int commentCount;
+
     public static PostDto fromEntity(Post post){
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
         postDto.setCreatedAt(post.getPostedOn());
-        postDto.setLikeCount(post.getLikeCount());
+        postDto.setLikeCount(post.getLikes().size());
+        postDto.setCommentCount(post.getComments().size());
         return postDto;
     }
 

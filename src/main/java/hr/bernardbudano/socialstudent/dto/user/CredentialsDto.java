@@ -13,7 +13,6 @@ public class CredentialsDto {
     private String username;
     private String email;
     private String bio;
-    private List<String> roles;
     private DateTime joinedOn;
     private String website;
     private String githubProfile;

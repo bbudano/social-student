@@ -1,9 +1,6 @@
 package hr.bernardbudano.socialstudent.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -55,14 +52,18 @@ public class UserData {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "author",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "author",
             cascade = CascadeType.ALL,
@@ -70,6 +71,8 @@ public class UserData {
     )
     private Set<Comment> comments = new HashSet<>();
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,

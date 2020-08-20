@@ -1,12 +1,14 @@
 package hr.bernardbudano.socialstudent.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(name = "post_like")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostLike {
 
     @EmbeddedId

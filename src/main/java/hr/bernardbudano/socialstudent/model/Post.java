@@ -1,15 +1,10 @@
 package hr.bernardbudano.socialstudent.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "post")
@@ -30,25 +25,36 @@ public class Post {
     @Column(name = "posted_on")
     private DateTime postedOn = DateTime.now();
 
-    @Column(name = "like_count")
-    private int likeCount = 0;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
     private UserData author;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "post",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "post",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<PostLike> likes = new HashSet<>();
+    private List<PostLike> likes = new ArrayList<>();
+
+    public void removeComment(final Iterator i, Comment comment) {
+        comment.setPost(null);
+        i.remove();
+    }
+
+    public void removeLike(final Iterator i, PostLike postLike) {
+        postLike.setPost(null);
+        i.remove();
+    }
 
 }
