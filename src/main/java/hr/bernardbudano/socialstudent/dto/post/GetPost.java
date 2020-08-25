@@ -18,7 +18,11 @@ public class GetPost {
 
     private DateTime postedOn;
 
+    private int likeCount;
+
     private List<CommentDto> comments;
+
+    private int commentCount;
 
     public static GetPost fromEntity(final Post post) {
         final GetPost postDto = new GetPost();
@@ -27,6 +31,7 @@ public class GetPost {
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
         postDto.setPostedOn(post.getPostedOn());
+        postDto.setLikeCount(post.getLikes().size());
 
         return postDto;
     }

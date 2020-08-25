@@ -2,28 +2,26 @@ package hr.bernardbudano.socialstudent.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hr.bernardbudano.socialstudent.model.Post;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostDto {
 
-    @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("body")
     private String body;
 
-    @JsonProperty("author")
     private String author;
 
-    @JsonProperty("createdAt")
-    private DateTime createdAt;
+    private DateTime postedOn;
 
-    @JsonProperty("likeCount")
     private int likeCount;
 
-    @JsonProperty("commentCount")
     private int commentCount;
 
     public static PostDto fromEntity(Post post){
@@ -31,7 +29,7 @@ public class PostDto {
         postDto.setId(post.getId());
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
-        postDto.setCreatedAt(post.getPostedOn());
+        postDto.setPostedOn(post.getPostedOn());
         postDto.setLikeCount(post.getLikes().size());
         postDto.setCommentCount(post.getComments().size());
         return postDto;

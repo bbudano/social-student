@@ -23,7 +23,7 @@ public class SocialStudentApplication {
 	@Autowired
 	private RoleRepository roleRepository;
 
-	/*@Configuration
+	@Configuration
 	@EnableWebMvc
 	protected class AppMvcConfiguration implements WebMvcConfigurer {
 
@@ -34,7 +34,7 @@ public class SocialStudentApplication {
 					.allowedMethods("GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE", "HEAD").allowCredentials(true);
 		}
 
-	}*/
+	}
 
 	/*@PostConstruct
 	public void insertRoles() {

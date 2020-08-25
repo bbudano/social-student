@@ -7,7 +7,6 @@ import hr.bernardbudano.socialstudent.dto.post.CreatePostRequest;
 import hr.bernardbudano.socialstudent.dto.post.GetPost;
 import hr.bernardbudano.socialstudent.dto.post.PostDto;
 import hr.bernardbudano.socialstudent.model.*;
-import hr.bernardbudano.socialstudent.repository.PostLikeRepository;
 import hr.bernardbudano.socialstudent.service.CommentService;
 import hr.bernardbudano.socialstudent.service.PostLikeService;
 import hr.bernardbudano.socialstudent.service.PostService;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -49,14 +47,14 @@ public class PostController {
     @PostMapping
     @ApiOperation("Creates new post")
     @ResponseStatus(HttpStatus.OK)
-    public Post create(@RequestBody CreatePostRequest request, Authentication authentication) {
+    public PostDto create(@RequestBody CreatePostRequest request, Authentication authentication) {
 
         // TODO: post not blank validation
 
         UserData author = userDataService.findByUsername(authentication.getName());
         Post post = CreatePostRequest.toEntity(request, author);
 
-        return postService.create(post);
+        return PostDto.fromEntity(postService.create(post));
     }
 
     @GetMapping
@@ -77,6 +75,7 @@ public class PostController {
             comments.add(CommentDto.fromEntity(comment));
         });
         post.setComments(comments);
+        post.setCommentCount(comments.size());
 
         return post;
     }
@@ -93,7 +92,7 @@ public class PostController {
         return CreateCommentResponse.fromEntity(comment);
     }
 
-    @PostMapping("/{postId}/like")
+    @GetMapping("/{postId}/like")
     public ResponseEntity<?> likePost(
             @PathVariable Long postId,
             Authentication authentication) {
@@ -108,17 +107,24 @@ public class PostController {
         PostLike postLike = new PostLike(postLikeId, post, user);
         postLikeService.create(postLike);
 
-        return ResponseEntity.ok("Post liked successfully");
+        return ResponseEntity.ok(new PostDto(
+            post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
+        ));
     }
 
-    @DeleteMapping("/{postId}/unlike")
-    public void unlikePost(
+    @GetMapping("/{postId}/unlike")
+    public PostDto unlikePost(
             @PathVariable Long postId,
             Authentication authentication) {
         PostLike postLike = postLikeService.findByPostIdAndUserId(postId,
                 userDataService.findByUsername(authentication.getName()).getId());
 
         postLikeService.delete(postLike);
+
+        Post post = postService.findById(postId);
+        return new PostDto(
+                post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
+        );
     }
 
     @DeleteMapping("/{postId}")
