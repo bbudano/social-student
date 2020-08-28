@@ -18,7 +18,7 @@ public class SignupRequest {
     @Email
     private String email;
 
-    private Set<String> role;
+    private Set<String> roles;
 
     @NotBlank(message = "Password must not be blank")
     @Size(min = 6, max = 40, message = "Password must be at least 6 characters long")

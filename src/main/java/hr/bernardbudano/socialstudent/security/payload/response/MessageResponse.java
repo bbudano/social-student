@@ -7,6 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class MessageResponse {
 
+    private MessageType type;
+
     private String message;
 
 }

@@ -45,6 +45,7 @@ public class PostController {
     private UserDataService userDataService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ApiOperation("Creates new post")
     @ResponseStatus(HttpStatus.OK)
     public PostDto create(@RequestBody CreatePostRequest request, Authentication authentication) {
@@ -66,6 +67,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ApiOperation("Returns post found by id")
     public GetPost getPostById(@NotNull @PathVariable Long id) {
 
@@ -81,6 +83,7 @@ public class PostController {
     }
 
     @PostMapping("/{id}/comment")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public CreateCommentResponse createComment(
             @PathVariable Long id,
             @RequestBody CreateCommentRequest request,
@@ -93,6 +96,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/like")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> likePost(
             @PathVariable Long postId,
             Authentication authentication) {
@@ -113,6 +117,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/unlike")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public PostDto unlikePost(
             @PathVariable Long postId,
             Authentication authentication) {
@@ -128,6 +133,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deletePost(@PathVariable Long postId,
                            Authentication authentication) {
         Post post = postService.findById(postId);

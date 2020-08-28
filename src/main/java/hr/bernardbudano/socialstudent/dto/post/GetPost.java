@@ -1,5 +1,6 @@
 package hr.bernardbudano.socialstudent.dto.post;
 
+import hr.bernardbudano.socialstudent.dto.PostLikeDto;
 import hr.bernardbudano.socialstudent.dto.comment.CommentDto;
 import hr.bernardbudano.socialstudent.model.Post;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class GetPost {
     private String author;
 
     private DateTime postedOn;
+
+    //private List<PostLikeDto> likes;
 
     private int likeCount;
 

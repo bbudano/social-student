@@ -11,11 +11,13 @@ import hr.bernardbudano.socialstudent.security.payload.request.LoginRequest;
 import hr.bernardbudano.socialstudent.security.payload.request.SignupRequest;
 import hr.bernardbudano.socialstudent.security.payload.response.JwtResponse;
 import hr.bernardbudano.socialstudent.security.payload.response.MessageResponse;
+import hr.bernardbudano.socialstudent.security.payload.response.MessageType;
 import hr.bernardbudano.socialstudent.security.payload.response.UserInfoResponse;
 import hr.bernardbudano.socialstudent.security.service.UserDetailsImpl;
 import hr.bernardbudano.socialstudent.service.UserDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,9 +25,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,17 +59,33 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        if(!userDataService.existsByUsername(loginRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.USERNAME_ERROR,"Invalid username"));
+        }
+        if(loginRequest.getUsername() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.USERNAME_ERROR, "Username must not be blank"));
+        }
+        if(loginRequest.getPassword() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.PASSWORD_ERROR, "Password must not be blank"));
+        }
+        UserData user = userDataService.findByUsername(loginRequest.getUsername());
+        if(!encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.PASSWORD_ERROR, "Invalid password"));
+        }
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
@@ -75,21 +95,19 @@ public class AuthController {
         if (userDataService.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse(MessageType.USERNAME_ERROR, "Username is already taken!"));
         }
-
         if (userDataService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse(MessageType.EMAIL_ERROR, "Email is already in use!"));
         }
 
-        // Create new user's account
         UserData user = new UserData(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -116,7 +134,7 @@ public class AuthController {
         user.setRoles(roles);
         userDataService.create(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(MessageType.OK, "User registered successfully!"));
     }
 
     @GetMapping("/userinfo")
@@ -149,6 +167,18 @@ public class AuthController {
                 roles,
                 likes
         ));
+    }
+
+    @PostMapping("/giveAdmin/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public ResponseEntity<?> giveUserAdminPermissions(@NotNull @PathVariable String username) {
+        UserData user = userDataService.findByUsername(username);
+
+        Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN).get();
+        user.getRoles().add(adminRole);
+
+        return ResponseEntity.ok("User " + username + " now has ADMIN PERMISSIONS.");
     }
 
 
