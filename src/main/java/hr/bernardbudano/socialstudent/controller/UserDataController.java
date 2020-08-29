@@ -2,11 +2,13 @@ package hr.bernardbudano.socialstudent.controller;
 
 import hr.bernardbudano.socialstudent.dto.UpdateUserInfoRequest;
 import hr.bernardbudano.socialstudent.dto.post.PostDto;
-import hr.bernardbudano.socialstudent.dto.user.GetUserResponse;
+import hr.bernardbudano.socialstudent.dto.user.GetUserProfileResponse;
 import hr.bernardbudano.socialstudent.dto.user.UserDto;
+import hr.bernardbudano.socialstudent.model.Role;
+import hr.bernardbudano.socialstudent.model.RoleName;
 import hr.bernardbudano.socialstudent.model.UserData;
+import hr.bernardbudano.socialstudent.repository.RoleRepository;
 import hr.bernardbudano.socialstudent.service.UserDataService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,16 +26,21 @@ public class UserDataController {
     @Autowired
     private UserDataService userDataService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @GetMapping("/{username}")
-    public GetUserResponse  getUser(@NotNull  @PathVariable("username") String username) {
+    public GetUserProfileResponse getUserProfile(@NotNull  @PathVariable("username") String username) {
         UserData user = userDataService.findByUsername(username);
+        Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Role not found."));
+        boolean isAdmin = user.getRoles().contains(adminRole);
 
         List<PostDto> posts = new ArrayList<>();
         user.getPosts().forEach(post -> {
             posts.add(PostDto.fromEntity(post));
         });
 
-        return new GetUserResponse(UserDto.fromEntity(user), posts);
+        return new GetUserProfileResponse(UserDto.fromEntity(user), isAdmin, posts);
     }
 
     @PatchMapping
