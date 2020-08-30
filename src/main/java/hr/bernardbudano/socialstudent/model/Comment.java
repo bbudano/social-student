@@ -16,10 +16,10 @@ public class Comment {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "body")
+    @Column(name = "body", nullable = false)
     private String body;
 
-    @Column(name = "posted_on")
+    @Column(name = "posted_on", nullable = false)
     private DateTime postedOn = DateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)

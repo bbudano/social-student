@@ -9,10 +9,7 @@ import hr.bernardbudano.socialstudent.repository.RoleRepository;
 import hr.bernardbudano.socialstudent.security.jwt.JwtUtils;
 import hr.bernardbudano.socialstudent.security.payload.request.LoginRequest;
 import hr.bernardbudano.socialstudent.security.payload.request.SignupRequest;
-import hr.bernardbudano.socialstudent.security.payload.response.JwtResponse;
-import hr.bernardbudano.socialstudent.security.payload.response.MessageResponse;
-import hr.bernardbudano.socialstudent.security.payload.response.MessageType;
-import hr.bernardbudano.socialstudent.security.payload.response.UserInfoResponse;
+import hr.bernardbudano.socialstudent.security.payload.response.*;
 import hr.bernardbudano.socialstudent.security.service.UserDetailsImpl;
 import hr.bernardbudano.socialstudent.service.UserDataService;
 import lombok.extern.slf4j.Slf4j;
@@ -169,34 +166,18 @@ public class AuthController {
         ));
     }
 
-    @PostMapping("/giveAdmin/{username}")
+    @PostMapping("/{username}/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<?> giveUserAdminPermissions(@NotNull @PathVariable String username) {
+    public ResponseEntity<?> updateUsersAdminPermissions(@NotNull @PathVariable String username) {
         UserData user = userDataService.findByUsername(username);
-
         Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN).get();
-        user.getRoles().add(adminRole);
-
-        return ResponseEntity.ok("User " + username + " now has ADMIN PERMISSIONS.");
-    }
-
-
-    // Test APIs
-    @GetMapping("/all")
-    public String all() {
-        return "Public content";
-    }
-
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public String onlyUser(){
-        return "User content";
-    }
-
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String onlyAdmin(){
-        return "Admin content";
+        if(user.getRoles().contains(adminRole)) {
+            user.getRoles().remove(adminRole);
+            return ResponseEntity.ok(new UpdateAdminResponse(false));
+        }else{
+            user.getRoles().add(adminRole);
+            return ResponseEntity.ok(new UpdateAdminResponse(true));
+        }
     }
 }

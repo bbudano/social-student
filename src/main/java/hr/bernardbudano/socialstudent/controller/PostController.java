@@ -7,6 +7,8 @@ import hr.bernardbudano.socialstudent.dto.post.CreatePostRequest;
 import hr.bernardbudano.socialstudent.dto.post.GetPost;
 import hr.bernardbudano.socialstudent.dto.post.PostDto;
 import hr.bernardbudano.socialstudent.model.*;
+import hr.bernardbudano.socialstudent.security.payload.response.MessageResponse;
+import hr.bernardbudano.socialstudent.security.payload.response.MessageType;
 import hr.bernardbudano.socialstudent.service.CommentService;
 import hr.bernardbudano.socialstudent.service.PostLikeService;
 import hr.bernardbudano.socialstudent.service.PostService;
@@ -48,14 +50,17 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ApiOperation("Creates new post")
     @ResponseStatus(HttpStatus.OK)
-    public PostDto create(@RequestBody CreatePostRequest request, Authentication authentication) {
-
-        // TODO: post not blank validation
+    public ResponseEntity<?> create(@RequestBody CreatePostRequest request, Authentication authentication) {
+        if(request.getBody() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.POST_ERROR, "Post can not be empty"));
+        }
 
         UserData author = userDataService.findByUsername(authentication.getName());
         Post post = CreatePostRequest.toEntity(request, author);
 
-        return PostDto.fromEntity(postService.create(post));
+        return ResponseEntity.ok(PostDto.fromEntity(postService.create(post)));
     }
 
     @GetMapping
@@ -84,15 +89,21 @@ public class PostController {
 
     @PostMapping("/{id}/comment")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public CreateCommentResponse createComment(
+    public ResponseEntity<?> createComment(
             @PathVariable Long id,
             @RequestBody CreateCommentRequest request,
             Authentication authentication) {
+        if(request.getBody() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.COMMENT_ERROR, "Comment can not be empty"));
+        }
+
         UserData author = userDataService.findByUsername(authentication.getName());
         Post post = postService.findById(id);
         Comment comment = commentService.create(CreateCommentRequest.toEntity(request, author, post));
 
-        return CreateCommentResponse.fromEntity(comment);
+        return ResponseEntity.ok(CreateCommentResponse.fromEntity(comment));
     }
 
     @GetMapping("/{postId}/like")

@@ -19,14 +19,14 @@ public class Post {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", name = "body")
+    @Column(columnDefinition = "TEXT", name = "body", nullable = false)
     private String body;
 
-    @Column(name = "posted_on")
+    @Column(name = "posted_on", nullable = false)
     private DateTime postedOn = DateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author", nullable = false)
     private UserData author;
 
     @ToString.Exclude
