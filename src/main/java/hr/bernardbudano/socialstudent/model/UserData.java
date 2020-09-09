@@ -31,6 +31,9 @@ public class UserData {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "bio")
     private String bio;
 
@@ -51,7 +54,6 @@ public class UserData {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

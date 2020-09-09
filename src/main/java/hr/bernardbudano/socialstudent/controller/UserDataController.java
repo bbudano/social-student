@@ -43,6 +43,14 @@ public class UserDataController {
         return new GetUserProfileResponse(UserDto.fromEntity(user), isAdmin, posts);
     }
 
+    @PatchMapping("/updateAvatar")
+    @Transactional
+    public ResponseEntity<?> updateUserAvatar(@RequestBody String avatarUrl, Authentication authentication) {
+        UserData user = userDataService.findByUsername(authentication.getName());
+        user.setAvatarUrl(avatarUrl);
+        return ResponseEntity.ok("Avatar updated successfully");
+    }
+
     @PatchMapping
     @Transactional
     public ResponseEntity<?> updateUserInfo(@RequestBody UpdateUserInfoRequest request, Authentication authentication) {

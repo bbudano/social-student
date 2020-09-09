@@ -123,7 +123,7 @@ public class PostController {
         postLikeService.create(postLike);
 
         return ResponseEntity.ok(new PostDto(
-            post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
+            post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getAuthor().getAvatarUrl(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
         ));
     }
 
@@ -139,7 +139,7 @@ public class PostController {
 
         Post post = postService.findById(postId);
         return new PostDto(
-                post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
+                post.getId(), post.getBody(), post.getAuthor().getUsername(), post.getAuthor().getAvatarUrl(), post.getPostedOn(), post.getLikes().size(), post.getComments().size()
         );
     }
 

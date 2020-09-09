@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.joda.time.DateTime;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 public class CredentialsDto {
 
     private String username;
     private String email;
+    private String avatarUrl;
     private String bio;
     private DateTime joinedOn;
     private String website;

@@ -18,6 +18,8 @@ public class PostDto {
 
     private String author;
 
+    private String authorAvatar;
+
     private DateTime postedOn;
 
     private int likeCount;
@@ -29,6 +31,7 @@ public class PostDto {
         postDto.setId(post.getId());
         postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
+        postDto.setAuthorAvatar(post.getAuthor().getAvatarUrl());
         postDto.setPostedOn(post.getPostedOn());
         postDto.setLikeCount(post.getLikes().size());
         postDto.setCommentCount(post.getComments().size());

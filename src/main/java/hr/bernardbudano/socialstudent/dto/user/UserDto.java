@@ -11,6 +11,8 @@ public class UserDto {
 
     private String username;
 
+    private String avatarUrl;
+
     private String bio;
 
     private String email;
@@ -27,6 +29,7 @@ public class UserDto {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
+        userDto.setAvatarUrl(user.getAvatarUrl());
         userDto.setBio(user.getBio());
         userDto.setEmail(user.getEmail());
         userDto.setWebsite(user.getWebsite());

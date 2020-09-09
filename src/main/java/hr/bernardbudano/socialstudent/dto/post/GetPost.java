@@ -17,6 +17,8 @@ public class GetPost {
 
     private String author;
 
+    private String authorAvatar;
+
     private DateTime postedOn;
 
     //private List<PostLikeDto> likes;
@@ -31,8 +33,9 @@ public class GetPost {
         final GetPost postDto = new GetPost();
 
         postDto.setId(post.getId());
-        postDto.setBody(post.getBody());
         postDto.setAuthor(post.getAuthor().getUsername());
+        postDto.setAuthorAvatar(post.getAuthor().getAvatarUrl());
+        postDto.setBody(post.getBody());
         postDto.setPostedOn(post.getPostedOn());
         postDto.setLikeCount(post.getLikes().size());
 

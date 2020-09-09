@@ -19,6 +19,8 @@ public class CommentDto {
 
     private String author;
 
+    private String authorAvatar;
+
     private Long postId;
 
     public static CommentDto fromEntity(Comment comment) {
@@ -27,6 +29,7 @@ public class CommentDto {
         commentDto.setBody(comment.getBody());
         commentDto.setPostedOn(comment.getPostedOn());
         commentDto.setAuthor(comment.getAuthor().getUsername());
+        commentDto.setAuthorAvatar(comment.getAuthor().getAvatarUrl());
         commentDto.setPostId(comment.getPost().getId());
         return commentDto;
     }
