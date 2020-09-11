@@ -9,6 +9,7 @@ import hr.bernardbudano.socialstudent.model.RoleName;
 import hr.bernardbudano.socialstudent.model.UserData;
 import hr.bernardbudano.socialstudent.repository.RoleRepository;
 import hr.bernardbudano.socialstudent.service.UserDataService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
+@Api(tags = "UserData controller")
 @RequestMapping("/api/user")
 public class UserDataController {
 
@@ -36,6 +39,7 @@ public class UserDataController {
         boolean isAdmin = user.getRoles().contains(adminRole);
 
         List<PostDto> posts = new ArrayList<>();
+        user.getPosts().sort((post1, post2) -> post2.getPostedOn().compareTo(post1.getPostedOn()));
         user.getPosts().forEach(post -> {
             posts.add(PostDto.fromEntity(post));
         });

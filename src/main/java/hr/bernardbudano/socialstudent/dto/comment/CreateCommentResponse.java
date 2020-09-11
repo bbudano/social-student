@@ -13,6 +13,8 @@ public class CreateCommentResponse {
 
     private String author;
 
+    private String authorAvatar;
+
     private Long postId;
 
     public static CreateCommentResponse fromEntity(Comment comment) {
@@ -20,6 +22,7 @@ public class CreateCommentResponse {
         response.setBody(comment.getBody());
         response.setPostedOn(comment.getPostedOn());
         response.setAuthor(comment.getAuthor().getUsername());
+        response.setAuthorAvatar(comment.getAuthor().getAvatarUrl());
         response.setPostId(comment.getPost().getId());
         return response;
     }

@@ -12,6 +12,7 @@ import hr.bernardbudano.socialstudent.security.payload.request.SignupRequest;
 import hr.bernardbudano.socialstudent.security.payload.response.*;
 import hr.bernardbudano.socialstudent.security.service.UserDetailsImpl;
 import hr.bernardbudano.socialstudent.service.UserDataService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@Api(tags = "Auth controller")
 @RequestMapping("/api/auth")
 public class AuthController {
 
