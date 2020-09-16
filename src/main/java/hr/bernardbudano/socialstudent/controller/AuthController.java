@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,6 +40,8 @@ import java.util.stream.Collectors;
 @Api(tags = "Auth controller")
 @RequestMapping("/api/auth")
 public class AuthController {
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -99,6 +102,31 @@ public class AuthController {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse(MessageType.EMAIL_ERROR, "Email is already in use!"));
+        }
+        if(signUpRequest.getUsername() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.USERNAME_ERROR, "Username must not be blank"));
+        }
+        if(signUpRequest.getEmail() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.EMAIL_ERROR, "Email must not be blank"));
+        }
+        if(signUpRequest.getPassword() == "") {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.PASSWORD_ERROR, "Password must not be blank"));
+        }
+        if(!VALID_EMAIL_ADDRESS_REGEX.matcher(signUpRequest.getEmail()).find()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.EMAIL_ERROR, "Invalid email"));
+        }
+        if(!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(MessageType.PASSWORD_ERROR, "Password and confirm password must match"));
         }
 
         UserData user = new UserData(signUpRequest.getUsername(),
