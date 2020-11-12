@@ -7,6 +7,7 @@ import hr.bernardbudano.socialstudent.dto.post.CreatePostRequest;
 import hr.bernardbudano.socialstudent.dto.post.GetPost;
 import hr.bernardbudano.socialstudent.dto.post.PostDto;
 import hr.bernardbudano.socialstudent.model.*;
+import hr.bernardbudano.socialstudent.repository.RoleRepository;
 import hr.bernardbudano.socialstudent.security.payload.response.MessageResponse;
 import hr.bernardbudano.socialstudent.security.payload.response.MessageType;
 import hr.bernardbudano.socialstudent.service.CommentService;
@@ -48,6 +49,9 @@ public class PostController {
     @Autowired
     private UserDataService userDataService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @ApiOperation("Creates new post")
@@ -68,7 +72,7 @@ public class PostController {
     @GetMapping
     @ApiOperation("Returns all posts (pageable)")
     public Page<PostDto> getAllPosts(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-                                     @RequestParam(name = "size", defaultValue = "20", required = false) Integer size) {
+                                     @RequestParam(name = "size", defaultValue = "5", required = false) Integer size) {
         final Page<Post> entityPage = postService.findAllByOrderByPostedOnDesc(PageRequest.of(page, size));
         return entityPage.map(PostDto::fromEntity);
     }
@@ -92,8 +96,8 @@ public class PostController {
     @PostMapping("/{id}/comment")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createComment(
-            @PathVariable Long id,
-            @RequestBody CreateCommentRequest request,
+            @NotNull @PathVariable Long id,
+            @NotNull @RequestBody CreateCommentRequest request,
             Authentication authentication) {
         if(request.getBody() == "") {
             return ResponseEntity
@@ -151,7 +155,9 @@ public class PostController {
                            Authentication authentication) {
         Post post = postService.findById(postId);
 
-        if(!post.getAuthor().getUsername().equals(authentication.getName())){
+        UserData requestSender = userDataService.findByUsername(authentication.getName());
+        Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN).get();
+        if(!post.getAuthor().getUsername().equals(authentication.getName()) && !requestSender.getRoles().contains(adminRole)){
             return ResponseEntity.badRequest().body("Only owner or admin can delete post");
         }
 
